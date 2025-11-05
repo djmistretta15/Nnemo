@@ -1,0 +1,14 @@
+{
+  "api_url": "http://localhost:8000",
+  "api_key": "your_api_key_here",
+  "node_type": "mist_node",
+  "name": "Alice_RTX4090",
+  "region": "us-east-2",
+  "latitude": 40.7282,
+  "longitude": -73.7949,
+  "price_per_gb_sec": 0.0000008,
+  "bandwidth_mbps": 980,
+  "base_latency_ms": 0.8,
+  "idle_schedule": "9am-5pm, 11pm-7am",
+  "heartbeat_interval": 60
+}
