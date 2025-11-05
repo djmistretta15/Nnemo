@@ -76,7 +76,7 @@ Nnemo/
 
 ### Prerequisites
 
-- Docker & Docker Compose
+- Docker & Docker Compose (recommended)
 - Python 3.11+
 - Node.js 18+ (for frontend development)
 - PostgreSQL 15 (or use Docker)
@@ -88,23 +88,57 @@ git clone https://github.com/yourusername/Nnemo.git
 cd Nnemo
 ```
 
-### 2. Start with Docker Compose
+### 2. Install Dependencies
+
+**Option A: One-Command Install (Easiest)**
+```bash
+make install-all
+```
+
+**Option B: Interactive Install Script**
+```bash
+./install.sh
+```
+
+**Option C: Docker (No installation needed)**
+```bash
+docker-compose up -d
+```
+
+**Option D: Manual Installation**
+```bash
+# Backend
+cd backend && pip install -r requirements.txt && cd ..
+
+# Frontend
+cd frontend && npm install && cd ..
+
+# Node Agent
+cd node-agent && pip install -r requirements.txt && cd ..
+```
+
+### 3. Configure & Start
 
 ```bash
 # Copy environment file
 cp backend/.env.example backend/.env
 
-# Edit .env with your settings
+# Edit .env with your settings (optional for development)
 nano backend/.env
 
-# Start all services
+# Start all services with Docker
 docker-compose up -d
+
+# OR start services manually
+make backend   # Terminal 1
+make frontend  # Terminal 2
 
 # Initialize database
 docker-compose exec backend python scripts/init_db.py
+# OR manually: cd backend && python scripts/init_db.py
 ```
 
-### 3. Access Services
+### 4. Access Services
 
 - **Backend API:** http://localhost:8000
 - **API Docs:** http://localhost:8000/docs
