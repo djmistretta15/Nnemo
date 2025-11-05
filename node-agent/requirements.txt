@@ -1,0 +1,9 @@
+# System Monitoring
+psutil==5.9.6
+
+# GPU Monitoring (Optional - only needed for systems with NVIDIA GPUs)
+# Uncomment the line below if you have an NVIDIA GPU
+# nvidia-ml-py==12.535.133
+
+# HTTP Requests
+requests==2.31.0
