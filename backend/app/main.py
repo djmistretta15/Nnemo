@@ -8,7 +8,7 @@ from app.config import settings
 from app.database import init_db
 
 # Import routers
-from app.api import auth, nodes, marketplace, contracts
+from app.api import auth, nodes, marketplace, contracts, websocket, payments, analytics, clusters
 
 # Create FastAPI app
 app = FastAPI(
@@ -33,6 +33,10 @@ app.include_router(auth.router)
 app.include_router(nodes.router)
 app.include_router(marketplace.router)
 app.include_router(contracts.router)
+app.include_router(payments.router)
+app.include_router(analytics.router)
+app.include_router(clusters.router)
+app.include_router(websocket.router)
 
 
 @app.on_event("startup")
