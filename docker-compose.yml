@@ -4,17 +4,17 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
-    container_name: mnemo-postgres
+    container_name: mar-postgres
     environment:
-      POSTGRES_USER: mnemo
-      POSTGRES_PASSWORD: mnemo_password
-      POSTGRES_DB: mnemo_db
+      POSTGRES_USER: mar_user
+      POSTGRES_PASSWORD: mar_password
+      POSTGRES_DB: mar_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mnemo"]
+      test: ["CMD-SHELL", "pg_isready -U mar_user"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -24,12 +24,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: mnemo-backend
+    container_name: mar-backend
     environment:
-      DATABASE_URL: postgresql://mnemo:mnemo_password@postgres:5432/mnemo_db
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-secret-key-change-in-production}
-      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
-      ETH_RPC_URL: ${ETH_RPC_URL:-}
+      DATABASE_URL: postgresql://mar_user:mar_password@postgres:5432/mar_db
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-secret-key-change-in-production-minimum-32-chars}
       CORS_ORIGINS: http://localhost:3000,http://localhost:8000
     ports:
       - "8000:8000"
@@ -38,16 +36,17 @@ services:
         condition: service_healthy
     volumes:
       - ./backend:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
 
-  # React Frontend (Development)
+  # Next.js Frontend
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: mnemo-frontend
+    container_name: mar-frontend
     environment:
-      REACT_APP_API_URL: http://localhost:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_API_V1_PREFIX: /api/v1
     ports:
       - "3000:3000"
     depends_on:
@@ -55,8 +54,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    stdin_open: true
-    tty: true
+      - /app/.next
+    command: npm run dev
 
 volumes:
   postgres_data:
