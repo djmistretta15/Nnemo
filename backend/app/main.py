@@ -1,19 +1,16 @@
 """
-Main FastAPI application for Mnemo platform
+Main FastAPI application for MAR (Memory Arbitrage Router)
 """
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import settings
-from app.database import init_db
-
-# Import routers
-from app.api import auth, nodes, marketplace, contracts, websocket, payments, analytics, clusters
+from app.core.config import settings
+from app.api.v1 import api_router
 
 # Create FastAPI app
 app = FastAPI(
-    title="MNEMO - Memory Arbitrage Platform",
-    description="VRAM/RAM-as-a-Service marketplace for AI teams",
+    title=settings.PROJECT_NAME,
+    description="VRAM-aware GPU placement engine for intelligent workload distribution",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -22,38 +19,23 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(auth.router)
-app.include_router(nodes.router)
-app.include_router(marketplace.router)
-app.include_router(contracts.router)
-app.include_router(payments.router)
-app.include_router(analytics.router)
-app.include_router(clusters.router)
-app.include_router(websocket.router)
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize database on startup"""
-    init_db()
-    print("✓ Database initialized")
-    print(f"✓ MNEMO API running on {settings.API_HOST}:{settings.API_PORT}")
+# Include API v1 router
+app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/")
 async def root():
     """Root endpoint"""
     return {
-        "name": "MNEMO API",
+        "name": settings.PROJECT_NAME,
         "version": "1.0.0",
-        "description": "Memory Arbitrage Platform",
+        "description": "Memory Arbitrage Router - VRAM-aware GPU placement engine",
         "docs": "/docs"
     }
 
@@ -63,15 +45,5 @@ async def health_check():
     """Health check endpoint"""
     return {
         "status": "healthy",
-        "environment": settings.ENVIRONMENT
+        "service": "mar-backend"
     }
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(
-        "app.main:app",
-        host=settings.API_HOST,
-        port=settings.API_PORT,
-        reload=settings.API_RELOAD
-    )
