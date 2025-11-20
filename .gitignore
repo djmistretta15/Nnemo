@@ -47,7 +47,10 @@ next-env.d.ts
 .env.production.local
 
 # IDE
-.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/extensions.json
+!.vscode/api-examples.http
 .idea/
 *.swp
 *.swo

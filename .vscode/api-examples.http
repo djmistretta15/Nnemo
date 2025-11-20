@@ -1,0 +1,183 @@
+### MAR API Testing Examples
+### Use the REST Client extension to run these requests
+
+@baseUrl = http://localhost:8000/api/v1
+@contentType = application/json
+
+### Variables (update after registration/login)
+@accessToken = your-access-token-here
+@refreshToken = your-refresh-token-here
+@nodeId = 1
+@profileId = 1
+
+################################################################################
+### Authentication
+################################################################################
+
+### Register New User and Organization
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "organization_name": "Demo Corp",
+  "email": "demo@example.com",
+  "password": "demopass123",
+  "full_name": "Demo User"
+}
+
+### Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "demo@example.com",
+  "password": "demopass123"
+}
+
+### Get Current User Info
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
+
+################################################################################
+### GPU Nodes
+################################################################################
+
+### Create a GPU Node
+POST {{baseUrl}}/nodes
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "name": "GPU-Node-A100-01",
+  "provider_name": "AWS",
+  "region": "us-east-1",
+  "gpu_model": "A100",
+  "vram_gb_total": 80.0,
+  "memory_bandwidth_gbps": 1935.0,
+  "network_latency_ms_estimate": 2.5
+}
+
+### List All Nodes
+GET {{baseUrl}}/nodes
+Authorization: Bearer {{accessToken}}
+
+### List Nodes by Region
+GET {{baseUrl}}/nodes?region=us-east-1&active=true
+Authorization: Bearer {{accessToken}}
+
+### Get Specific Node
+GET {{baseUrl}}/nodes/{{nodeId}}
+Authorization: Bearer {{accessToken}}
+
+### Update Node
+PATCH {{baseUrl}}/nodes/{{nodeId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "is_active": true,
+  "network_latency_ms_estimate": 2.0
+}
+
+################################################################################
+### Telemetry
+################################################################################
+
+### Submit Telemetry Data
+POST {{baseUrl}}/nodes/{{nodeId}}/telemetry
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "vram_gb_free": 60.0,
+  "utilization_percent": 25.0,
+  "temperature_c": 65.0
+}
+
+### Get Node Telemetry History
+GET {{baseUrl}}/nodes/{{nodeId}}/telemetry?limit=10
+Authorization: Bearer {{accessToken}}
+
+################################################################################
+### Model Profiles
+################################################################################
+
+### Create Model Profile
+POST {{baseUrl}}/model-profiles
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Llama-2-13B",
+  "suggested_min_vram_gb": 24.0,
+  "suggested_batch_size": 4,
+  "category": "llm"
+}
+
+### List Model Profiles
+GET {{baseUrl}}/model-profiles
+Authorization: Bearer {{accessToken}}
+
+### Get Specific Model Profile
+GET {{baseUrl}}/model-profiles/{{profileId}}
+Authorization: Bearer {{accessToken}}
+
+################################################################################
+### Placement Requests
+################################################################################
+
+### Create Placement Request (with explicit VRAM)
+POST {{baseUrl}}/placement/requests
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "model_name": "Llama-2-13B",
+  "required_vram_gb": 24.0,
+  "preferred_region": "us-east-1",
+  "priority": "normal"
+}
+
+### Create Placement Request (using model profile)
+POST {{baseUrl}}/placement/requests
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "model_name": "Llama-2-13B",
+  "priority": "high"
+}
+
+### List All Placement Requests
+GET {{baseUrl}}/placement/requests
+Authorization: Bearer {{accessToken}}
+
+### Get Specific Placement Request
+GET {{baseUrl}}/placement/requests/1
+Authorization: Bearer {{accessToken}}
+
+################################################################################
+### Public API (No Auth)
+################################################################################
+
+### Get Placement Quote (Public API)
+POST {{baseUrl}}/public/placement/quote
+X-API-Key: demo-api-key
+Content-Type: {{contentType}}
+
+{
+  "model_name": "Llama-2-13B",
+  "required_vram_gb": 24.0,
+  "preferred_region": "us-east-1"
+}
+
+################################################################################
+### Health Check
+################################################################################
+
+### Backend Health Check
+GET http://localhost:8000/health
+
+### Root Endpoint
+GET http://localhost:8000/

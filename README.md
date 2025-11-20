@@ -1,5 +1,7 @@
 # 🚀 MAR - Memory Arbitrage Router
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/djmistretta15/Nnemo)
+
 > **VRAM-aware GPU placement engine for intelligent workload distribution**
 
 MAR (Memory Arbitrage Router) is a production-ready system that functions as the intelligence layer for GPU workload placement, deciding which GPU nodes receive workloads based on memory efficiency, locality, and real-time telemetry.
@@ -111,20 +113,46 @@ MAR/
 
 ## 🏃 Quick Start
 
-### Prerequisites
+### ☁️ Option 1: GitHub Codespaces (Recommended)
+
+**One-click development environment in your browser!**
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/djmistretta15/Nnemo)
+
+1. Click "Code" → "Codespaces" → "Create codespace on main"
+2. Wait for the environment to build (~2-3 minutes)
+3. Run `docker-compose up --build` in the terminal
+4. Access services via the "Ports" tab:
+   - Frontend: Port 3000
+   - Backend API: Port 8000
+
+**What's Included:**
+- ✅ Pre-configured Python 3.11 + Node.js 18 environment
+- ✅ All VS Code extensions (Python, TypeScript, Docker, etc.)
+- ✅ Docker-in-Docker for running services
+- ✅ Port forwarding automatically configured
+- ✅ Database tools and REST client for API testing
+
+See [.devcontainer/README.md](.devcontainer/README.md) for details.
+
+---
+
+### 💻 Option 2: Local Development
+
+#### Prerequisites
 
 - Docker & Docker Compose
 - (Optional) Python 3.11+ for local backend dev
 - (Optional) Node.js 18+ for local frontend dev
 
-### 1. Clone Repository
+#### 1. Clone Repository
 
 ```bash
 git clone https://github.com/djmistretta15/Nnemo.git
 cd Nnemo
 ```
 
-### 2. Start with Docker Compose
+#### 2. Start with Docker Compose
 
 ```bash
 # Start all services
@@ -137,14 +165,14 @@ docker-compose up --build
 # 4. Start Next.js frontend on port 3000
 ```
 
-### 3. Access Services
+#### 3. Access Services
 
 - **Frontend UI:** http://localhost:3000
 - **Backend API:** http://localhost:8000
 - **API Docs:** http://localhost:8000/docs
 - **Database:** localhost:5432
 
-### 4. Create Your First Account
+#### 4. Create Your First Account
 
 1. Navigate to http://localhost:3000
 2. Click "Sign Up"
